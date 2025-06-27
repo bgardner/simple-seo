@@ -4,6 +4,8 @@ Stable tag: 0.5
 Tested up to: 6.8
 Requires at least: 6.8
 
+https://briangarder.com/simple-seo/
+
 == Description ==
 
 Set custom title, meta description, robots, and canonical URLs for posts and pages, with built-in Open Graph support.
