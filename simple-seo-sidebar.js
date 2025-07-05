@@ -8,7 +8,7 @@
     const { PluginDocumentSettingPanel } = wp.editPost;
     const { TextControl, TextareaControl, SelectControl } = wp.components;
     const { useSelect, useDispatch } = wp.data;
-    const { __ } = wp.i18n;
+    const { __, _n, sprintf } = wp.i18n;
     const { createElement: el } = wp.element;
 
     function SimpleSEOPlugin() {
@@ -29,6 +29,9 @@
             editPost( { meta: { ...meta, [ key ]: value } } );
         }
 
+        // Character count for description,
+        const descCount = simple_seo_seo_description.length;
+
         return el(
             PluginDocumentSettingPanel,
             {
@@ -36,16 +39,37 @@
                 title: __( 'Simple SEO', 'simple-seo' ),
                 initialOpen: true,
             },
+
+            // SEO Title.
             el( TextControl, {
                 label: __( 'SEO Title', 'simple-seo' ),
                 value: simple_seo_seo_title,
                 onChange: value => onChangeMeta( 'simple_seo_seo_title', value ),
             } ),
+
+            // Meta Description.
             el( TextareaControl, {
                 label: __( 'Meta Description', 'simple-seo' ),
                 value: simple_seo_seo_description,
                 onChange: value => onChangeMeta( 'simple_seo_seo_description', value ),
             } ),
+
+            // Live character counter.
+            el(
+                'p',
+                { style: { marginTop: '4px', fontSize: '12px', color: '#666' } },
+                sprintf(
+                    _n(
+                        '%s character',
+                        '%s characters',
+                        descCount,
+                        'simple-seo'
+                    ),
+                    descCount
+                )
+            ),
+
+            // Robots dropdown.
             el( SelectControl, {
                 label: __( 'Robots', 'simple-seo' ),
                 value: simple_seo_seo_robots,
@@ -57,6 +81,8 @@
                 ],
                 onChange: value => onChangeMeta( 'simple_seo_seo_robots', value ),
             } ),
+
+            // Canonical URL.
             el( TextControl, {
                 label: __( 'Canonical URL', 'simple-seo' ),
                 type: 'url',
