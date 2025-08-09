@@ -29,8 +29,9 @@
 			editPost( { meta: { ...meta, [ key ]: value } } );
 		}
 
-		// Character count for description,
-		const descCount = simple_seo_seo_description.length;
+		// Character counts.
+		const titleCount = simple_seo_seo_title.length;
+		const descCount  = simple_seo_seo_description.length;
 
 		return el(
 			PluginDocumentSettingPanel,
@@ -46,6 +47,16 @@
 				value: simple_seo_seo_title,
 				onChange: value => onChangeMeta( 'simple_seo_seo_title', value ),
 			} ),
+			// Title counter.
+			el(
+				'p',
+				{ style: { marginTop: '4px', marginBottom: '12px', fontSize: '12px', color: '#666' } },
+				sprintf(
+					/* translators: %s: character count */
+					_n( '%s character', '%s characters', titleCount, 'simple-seo' ),
+					titleCount
+				)
+			),
 
 			// Meta Description.
 			el( TextareaControl, {
@@ -53,18 +64,13 @@
 				value: simple_seo_seo_description,
 				onChange: value => onChangeMeta( 'simple_seo_seo_description', value ),
 			} ),
-
-			// Live character counter.
+			// Description counter.
 			el(
 				'p',
-				{ style: { marginTop: '4px', fontSize: '12px', color: '#666' } },
+				{ style: { marginTop: '4px', marginBottom: '12px', fontSize: '12px', color: '#666' } },
 				sprintf(
-					_n(
-						'%s character',
-						'%s characters',
-						descCount,
-						'simple-seo'
-					),
+					/* translators: %s: character count */
+					_n( '%s character', '%s characters', descCount, 'simple-seo' ),
 					descCount
 				)
 			),
@@ -74,9 +80,9 @@
 				label: __( 'Robots', 'simple-seo' ),
 				value: simple_seo_seo_robots,
 				options: [
-					{ label: __( 'Index, Follow',   'simple-seo' ), value: 'index,follow' },
-					{ label: __( 'Noindex, Follow', 'simple-seo' ), value: 'noindex,follow' },
-					{ label: __( 'Index, Nofollow', 'simple-seo' ), value: 'index,nofollow' },
+					{ label: __( 'Index, Follow',    'simple-seo' ), value: 'index,follow' },
+					{ label: __( 'Noindex, Follow',  'simple-seo' ), value: 'noindex,follow' },
+					{ label: __( 'Index, Nofollow',  'simple-seo' ), value: 'index,nofollow' },
 					{ label: __( 'Noindex, Nofollow','simple-seo' ), value: 'noindex,nofollow' },
 				],
 				onChange: value => onChangeMeta( 'simple_seo_seo_robots', value ),
