@@ -1,10 +1,11 @@
 <?php
 /**
  * Plugin Name: Simple SEO
- * Plugin URI:  https://briangarder.com/simple-seo/
+ * Plugin URI: https://briangarder.com/simple-seo/
  * Description: Set custom title, meta description, robots, and canonical URLs for posts and pages, with built-in Open Graph support.
- * Version:     0.5
- * Author URI:  https://briangarder.com/
+ * Version: 0.5
+ * Author: Brian Gardner
+ * Author URI: https://briangarder.com/
  * Text Domain: simple-seo
  */
 
