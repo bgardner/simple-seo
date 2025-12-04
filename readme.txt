@@ -4,7 +4,7 @@ Stable tag: 0.5
 Tested up to: 6.8
 Requires at least: 6.8
 
-https://briangarder.com/simple-seo/
+https://briangardner.com/simple-seo/
 
 == Description ==
 
