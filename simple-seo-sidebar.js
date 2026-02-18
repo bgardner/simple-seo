@@ -1,5 +1,4 @@
 /**
- * simple-seo-sidebar.js
  * Block editor sidebar for Simple SEO plugin.
  */
 
