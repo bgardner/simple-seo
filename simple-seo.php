@@ -112,6 +112,7 @@ function simple_seo_head_output() {
     }
 
     $id          = get_queried_object_id();
+	$seo_title   = simple_seo_custom_title( get_the_title( $id ) );
     $description = get_post_meta( $id, 'simple_seo_seo_description', true ) ?: get_the_excerpt();
     $canonical   = get_post_meta( $id, 'simple_seo_seo_canonical', true ) ?: get_permalink( $id );
 
@@ -131,7 +132,7 @@ function simple_seo_head_output() {
 
     echo '    <meta property="og:locale" content="' . esc_attr( get_locale() ) . "\" />\n";
     echo '    <meta property="og:type" content="article" />' . "\n";
-    echo '    <meta property="og:title" content="' . esc_attr( simple_seo_custom_title( get_the_title( $id ) ) ) . "\" />\n";
+    echo '    <meta property="og:title" content="' . esc_attr( $seo_title ) . "\" />\n";
     echo '    <meta property="og:description" content="' . esc_attr( $description ) . "\" />\n";
     echo '    <meta property="og:url" content="' . esc_url( get_permalink( $id ) ) . "\" />\n";
     echo '    <meta property="og:site_name" content="' . esc_attr( get_bloginfo( 'name' ) ) . "\" />\n";
@@ -160,7 +161,7 @@ function simple_seo_head_output() {
         "@type"         => "WebPage",
         "@id"           => get_permalink( $id ),
         "url"           => get_permalink( $id ),
-        "name"          => simple_seo_custom_title( get_the_title( $id ) ),
+        "name".         => $seo_title,
         "datePublished" => get_the_date( 'c', $id ),
         "dateModified"  => get_the_modified_date( 'c', $id ),
     ];
