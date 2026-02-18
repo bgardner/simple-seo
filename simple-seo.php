@@ -13,12 +13,17 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Remove default robots.
-add_filter( 'wp_robots', '__return_empty_array' );
-remove_action( 'wp_head', 'wp_robots' );
+// Remove core canonical and robots on singular.
+add_action( 'template_redirect', function() {
 
-// Remove default canonical.
-remove_action( 'wp_head', 'rel_canonical' );
+	if ( is_admin() || ! is_singular() ) {
+		return;
+	}
+
+	remove_action( 'wp_head', 'rel_canonical' );
+	remove_action( 'wp_head', 'wp_robots', 1 );
+
+});
 
 // Register meta fields.
 add_action( 'init', function() {
