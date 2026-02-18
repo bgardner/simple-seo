@@ -173,34 +173,42 @@ function simple_seo_head_output() {
 // Exclude noindex and custom‐canonical posts/pages from sitemap.
 add_filter( 'wp_sitemaps_posts_query_args', 'simple_seo_sitemap_exclusions', 10, 2 );
 function simple_seo_sitemap_exclusions( $args, $post_type ) {
-    if ( in_array( $post_type, [ 'post', 'page' ], true ) ) {
-        // Remove items marked “noindex”
-        $args['meta_query'][] = [
-            'relation' => 'OR',
-            [
-                'key'     => 'simple_seo_seo_robots',
-                'value'   => 'noindex',
-                'compare' => 'NOT LIKE',
-            ],
-            [
-                'key'     => 'simple_seo_seo_robots',
-                'compare' => 'NOT EXISTS',
-            ],
-        ];
 
-        // Remove items with custom canonical URL
-        $args['meta_query'][] = [
-            'relation' => 'OR',
-            [
-                'key'     => 'simple_seo_seo_canonical',
-                'value'   => '',
-                'compare' => '=',
-            ],
-            [
-                'key'     => 'simple_seo_seo_canonical',
-                'compare' => 'NOT EXISTS',
-            ],
-        ];
-    }
-    return $args;
+	if ( in_array( $post_type, [ 'post', 'page' ], true ) ) {
+
+		// Ensure meta_query exists.
+		if ( ! isset( $args['meta_query'] ) ) {
+			$args['meta_query'] = [];
+		}
+
+		// Remove items marked “noindex”.
+		$args['meta_query'][] = [
+			'relation' => 'OR',
+			[
+				'key'     => 'simple_seo_seo_robots',
+				'value'   => 'noindex',
+				'compare' => 'NOT LIKE',
+			],
+			[
+				'key'     => 'simple_seo_seo_robots',
+				'compare' => 'NOT EXISTS',
+			],
+		];
+
+		// Remove items with custom canonical URL.
+		$args['meta_query'][] = [
+			'relation' => 'OR',
+			[
+				'key'     => 'simple_seo_seo_canonical',
+				'value'   => '',
+				'compare' => '=',
+			],
+			[
+				'key'     => 'simple_seo_seo_canonical',
+				'compare' => 'NOT EXISTS',
+			],
+		];
+	}
+
+	return $args;
 }
