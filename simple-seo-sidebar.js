@@ -22,6 +22,7 @@
 			simple_seo_seo_description = '',
 			simple_seo_seo_robots = '',
 			simple_seo_seo_canonical = '',
+			simple_seo_seo_redirect = '',
 		} = meta;
 
 		function onChangeMeta( key, value ) {
@@ -93,6 +94,14 @@
 				type: 'url',
 				value: simple_seo_seo_canonical,
 				onChange: value => onChangeMeta( 'simple_seo_seo_canonical', value ),
+			} ),
+
+			// Redirect URL.
+			el( TextControl, {
+				label: __( 'Redirect URL', 'simple-seo' ),
+				help: __( 'Permanently redirect this URL. Relative paths such as /suede/ are supported.', 'simple-seo' ),
+				value: simple_seo_seo_redirect,
+				onChange: value => onChangeMeta( 'simple_seo_seo_redirect', value ),
 			} )
 		);
 	}

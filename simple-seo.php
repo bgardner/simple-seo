@@ -3,7 +3,7 @@
  * Plugin Name: Simple SEO
  * Plugin URI: https://briangardner.com/simple-seo/
  * Description: Set custom title, meta description, robots, and canonical URLs for posts and pages, with built-in Open Graph support.
- * Version: 0.5
+ * Version: 0.5.1
  * Author: Brian Gardner
  * Author URI: https://briangardner.com/
  * Text Domain: simple-seo
@@ -44,14 +44,73 @@ add_action( 'init', function() {
 	register_post_meta( 'post', 'simple_seo_seo_description', $common_args );
 	register_post_meta( 'post', 'simple_seo_seo_robots', $common_args );
 	register_post_meta( 'post', 'simple_seo_seo_canonical', $common_args );
+	register_post_meta( 'post', 'simple_seo_seo_redirect', [
+		...$common_args,
+		'sanitize_callback' => 'simple_seo_sanitize_redirect',
+	] );
 
 	// Pages.
 	register_post_meta( 'page', 'simple_seo_seo_title', $common_args );
 	register_post_meta( 'page', 'simple_seo_seo_description', $common_args );
 	register_post_meta( 'page', 'simple_seo_seo_robots', $common_args );
 	register_post_meta( 'page', 'simple_seo_seo_canonical', $common_args );
+	register_post_meta( 'page', 'simple_seo_seo_redirect', [
+		...$common_args,
+		'sanitize_callback' => 'simple_seo_sanitize_redirect',
+	] );
 
 } );
+
+
+/**
+ * Sanitize redirect destinations.
+ *
+ * Supports same-site relative paths such as /suede/ and absolute HTTP(S) URLs.
+ */
+function simple_seo_sanitize_redirect( $value ) {
+
+	$value = trim( (string) $value );
+
+	if ( '' === $value ) {
+		return '';
+	}
+
+	if ( str_starts_with( $value, '/' ) && ! str_starts_with( $value, '//' ) ) {
+		return sanitize_text_field( $value );
+	}
+
+	return esc_url_raw( $value, [ 'http', 'https' ] );
+}
+
+/**
+ * Redirect singular posts/pages when a redirect URL is set.
+ */
+add_action( 'template_redirect', 'simple_seo_redirect', 0 );
+function simple_seo_redirect() {
+
+	if ( is_admin() || ! is_singular() ) {
+		return;
+	}
+
+	$id       = get_queried_object_id();
+	$redirect = get_post_meta( $id, 'simple_seo_seo_redirect', true );
+
+	if ( ! $redirect ) {
+		return;
+	}
+
+	if ( str_starts_with( $redirect, '/' ) ) {
+		$redirect = home_url( $redirect );
+	}
+
+	// Avoid a redirect loop if the destination resolves to the current URL.
+	if ( untrailingslashit( $redirect ) === untrailingslashit( get_permalink( $id ) ) ) {
+		return;
+	}
+
+	wp_redirect( $redirect, 301, 'Simple SEO' );
+	exit;
+}
 
 /**
  * Override title.
@@ -233,6 +292,20 @@ function simple_seo_sitemap_exclusions( $args, $post_type ) {
 			],
 			[
 				'key'     => 'simple_seo_seo_canonical',
+				'compare' => 'NOT EXISTS',
+			],
+		];
+
+		// Remove items that redirect elsewhere.
+		$args['meta_query'][] = [
+			'relation' => 'OR',
+			[
+				'key'     => 'simple_seo_seo_redirect',
+				'value'   => '',
+				'compare' => '=',
+			],
+			[
+				'key'     => 'simple_seo_seo_redirect',
 				'compare' => 'NOT EXISTS',
 			],
 		];
