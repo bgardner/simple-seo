@@ -2,6 +2,7 @@
 /**
  * Plugin Name: Simple SEO
  * Plugin URI: https://briangardner.com/simple-seo/
+ * Update URI: false
  * Description: Set custom title, meta description, robots, and canonical URLs for posts and pages, with built-in Open Graph support.
  * Version: 0.5.1
  * Author: Brian Gardner
