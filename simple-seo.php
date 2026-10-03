@@ -4,7 +4,7 @@
  * Plugin URI: https://briangardner.com/simple-seo/
  * Update URI: false
  * Description: Set custom title, meta description, robots, and canonical URLs for posts and pages, with built-in Open Graph support.
- * Version: 0.5.1
+ * Version: 0.5.2
  * Author: Brian Gardner
  * Author URI: https://briangardner.com/
  * Text Domain: simple-seo
@@ -29,6 +29,34 @@ add_action( 'template_redirect', function() {
 } );
 
 /**
+ * Keep fields out of the native Custom Fields form.
+ */
+add_filter( 'is_protected_meta', 'simple_seo_protect_meta', 10, 3 );
+function simple_seo_protect_meta( $protected, $meta_key, $meta_type ) {
+
+	$keys = [
+		'simple_seo_seo_title',
+		'simple_seo_seo_description',
+		'simple_seo_seo_robots',
+		'simple_seo_seo_canonical',
+		'simple_seo_seo_redirect',
+	];
+
+	if ( 'post' === $meta_type && in_array( $meta_key, $keys, true ) ) {
+		return true;
+	}
+
+	return $protected;
+}
+
+/**
+ * Allow sidebar updates only for users who can edit the post.
+ */
+function simple_seo_auth_meta( $allowed, $meta_key, $post_id ) {
+	return current_user_can( 'edit_post', $post_id );
+}
+
+/**
  * Register meta fields.
  */
 add_action( 'init', function() {
@@ -38,6 +66,7 @@ add_action( 'init', function() {
 		'single'            => true,
 		'type'              => 'string',
 		'sanitize_callback' => 'sanitize_text_field',
+		'auth_callback'     => 'simple_seo_auth_meta',
 	];
 
 	// Posts.
