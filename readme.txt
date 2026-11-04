@@ -1,7 +1,7 @@
 === Simple SEO ===
 Contributors: bgardner
 Stable tag: 0.5.2
-Tested up to: 7.0
+Tested up to: 7.1
 Requires at least: 7.1
 
 https://briangardner.com/simple-seo/
