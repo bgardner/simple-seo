@@ -5,7 +5,7 @@
 ( function( wp ) {
 	const { registerPlugin } = wp.plugins;
 	const { PluginDocumentSettingPanel } = wp.editPost;
-	const { TextControl, TextareaControl, SelectControl } = wp.components;
+	const { TextControl, TextareaControl, SelectControl, __experimentalVStack: VStack } = wp.components;
 	const { useSelect, useDispatch } = wp.data;
 	const { __, _n, sprintf } = wp.i18n;
 	const { createElement: el } = wp.element;
@@ -75,34 +75,40 @@
 				)
 			),
 
-			// Robots dropdown.
-			el( SelectControl, {
-				label: __( 'Robots', 'simple-seo' ),
-				value: simple_seo_seo_robots,
-				options: [
-					{ label: __( 'Index, Follow',    'simple-seo' ), value: 'index,follow' },
-					{ label: __( 'Noindex, Follow',  'simple-seo' ), value: 'noindex,follow' },
-					{ label: __( 'Index, Nofollow',  'simple-seo' ), value: 'index,nofollow' },
-					{ label: __( 'Noindex, Nofollow','simple-seo' ), value: 'noindex,nofollow' },
-				],
-				onChange: value => onChangeMeta( 'simple_seo_seo_robots', value ),
-			} ),
+			// Use native component layout.
+			el( VStack, { spacing: 4 },
+				// Robots dropdown.
+				el( SelectControl, {
+					__nextHasNoMarginBottom: true,
+					label: __( 'Robots', 'simple-seo' ),
+					value: simple_seo_seo_robots,
+					options: [
+						{ label: __( 'Index, Follow',    'simple-seo' ), value: 'index,follow' },
+						{ label: __( 'Noindex, Follow',  'simple-seo' ), value: 'noindex,follow' },
+						{ label: __( 'Index, Nofollow',  'simple-seo' ), value: 'index,nofollow' },
+						{ label: __( 'Noindex, Nofollow','simple-seo' ), value: 'noindex,nofollow' },
+					],
+					onChange: value => onChangeMeta( 'simple_seo_seo_robots', value ),
+				} ),
 
-			// Canonical URL.
-			el( TextControl, {
-				label: __( 'Canonical URL', 'simple-seo' ),
-				type: 'url',
-				value: simple_seo_seo_canonical,
-				onChange: value => onChangeMeta( 'simple_seo_seo_canonical', value ),
-			} ),
+				// Canonical URL.
+				el( TextControl, {
+					__nextHasNoMarginBottom: true,
+					label: __( 'Canonical URL', 'simple-seo' ),
+					type: 'url',
+					value: simple_seo_seo_canonical,
+					onChange: value => onChangeMeta( 'simple_seo_seo_canonical', value ),
+				} ),
 
-			// Redirect URL.
-			el( TextControl, {
-				label: __( 'Redirect URL', 'simple-seo' ),
-				help: __( 'Permanently redirect this URL. Relative paths such as /suede/ are supported.', 'simple-seo' ),
-				value: simple_seo_seo_redirect,
-				onChange: value => onChangeMeta( 'simple_seo_seo_redirect', value ),
-			} )
+				// Redirect URL.
+				el( TextControl, {
+					__nextHasNoMarginBottom: true,
+					label: __( 'Redirect URL', 'simple-seo' ),
+					help: __( 'Permanently redirect this URL. Relative paths such as /suede/ are supported.', 'simple-seo' ),
+					value: simple_seo_seo_redirect,
+					onChange: value => onChangeMeta( 'simple_seo_seo_redirect', value ),
+				} )
+			)
 		);
 	}
 
